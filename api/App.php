@@ -25,7 +25,7 @@ class DevblocksStorageEngineGatekeeper extends Extension_DevblocksStorageEngine 
 		if(!isset($username) || !isset($password) || !isset($url))
 			return false;
 		
-		if(!$this->_getSignedURL($username, $password, $url))
+		if(!$this->_getSignedURL($username, $password, $url . '?test=true'))
 			return false;
 
 		return true;
