@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.devblocks.com/schema/plugin.xsd">
+	<id>wgm.storage.s3.gatekeeper</id>
+	<name>[Cerb5] Gatekeeper</name>
+	<description>Gatekeeper storage engine.</description>
+	<author>WebGroup Media, LLC.</author>
+	<revision>0</revision>
+	<link>http://wiki.cerb4.com/wiki/New_Changes</link>
+	
+	<!-- Plugin Dependencies -->
+	
+	<dependencies>
+		<require plugin_id="cerberusweb.core" version="5.3.0" />
+	</dependencies>
+
+
+
+	<!-- Declared Extension Points -->
+
+	<!-- 
+	<extension_points>
+		<point id=""></point>
+	</extension_points>
+	-->
+	
+	
+	<!-- Extensions -->
+
+	<extensions>
+
+		<!-- Storage Engines -->
+		<extension point="devblocks.storage.engine">
+			<id>devblocks.storage.engine.gatekeeper</id>
+			<name>Gatekeeper</name>
+			<class>
+				<file>api/App.php</file>
+				<name>DevblocksStorageEngineGatekeeper</name>
+			</class>
+			<params>
+			</params>
+		</extension>		
+
+	</extensions>
+</plugin>
