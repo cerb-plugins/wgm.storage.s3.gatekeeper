@@ -85,9 +85,10 @@ class DevblocksStorageEngineGatekeeper extends Extension_DevblocksStorageEngine 
 	
 	public function get($namespace, $key, &$fp=null) {
 		$path = $this->escapeNamespace($namespace) . '/' . $key;
-	
-		$url = $this->_getSignedURL($this->_options['username'], $this->_options['password'], $this->_options['url'], 'GET', $path);
-	
+		
+		if(false == ($url = $this->_getSignedURL($this->_options['username'], $this->_options['password'], $this->_options['url'], 'GET', $path)))
+			return false;
+		
 		if($fp && is_resource($fp)) {
 			// [TODO] Make this work with streams
 			if(false == ($data = $this->_execute($url, 'GET')))
@@ -113,15 +114,17 @@ class DevblocksStorageEngineGatekeeper extends Extension_DevblocksStorageEngine 
 		// [TODO] Fail gracefully if resource doesn't exist (pass)
 		$path = $this->escapeNamespace($namespace) . '/' . $key;
 	
-		$url = $this->_getSignedURL($this->_options['username'], $this->_options['password'], $this->_options['url'], $path);
+		if(false ==  ($url = $this->_getSignedURL($this->_options['username'], $this->_options['password'], $this->_options['url'], $path)))
+			return false;
 	
 		if(false == ($data = $this->_execute($url, 'DELETE')))
 			return false;
 	
 		return TRUE;
 	}
-	
-	private function _getSignedURL($username, $password, $url, $verb = 'GET', $filename = null) {	
+
+	private function _getSignedURL($username, $password, $url, $verb = 'GET', $filename = null) {
+		$logger = DevblocksPlatform::getConsoleLog();
 		$header = array();
 		$ch = curl_init();
 		$payload = array('verb' => $verb, 'key' => $filename);
@@ -171,11 +174,10 @@ class DevblocksStorageEngineGatekeeper extends Extension_DevblocksStorageEngine 
 	
 		// Check status code
 		$status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-	
-		if(2 != substr($status,0,1))
+		if(2 != substr($status,0,1)) {
+			$logger->error(sprintf("[Storage] Error connecting to Gatekeeper: %s", $status));
 			return false;
-	
-		if(empty($output))
+		}
 		// Parse output
 		$output = json_decode($output, true);
 		
@@ -190,6 +192,7 @@ class DevblocksStorageEngineGatekeeper extends Extension_DevblocksStorageEngine 
 	
 	// [TODO] Make this streaming safe
 	private function _execute($url, $verb = 'GET', $data = null, $length = null) {
+		$logger = DevblocksPlatform::getConsoleLog();
 		try {
 			$ch = curl_init($url);
 			$http_date = gmdate(DATE_RFC822);
@@ -234,9 +237,11 @@ class DevblocksStorageEngineGatekeeper extends Extension_DevblocksStorageEngine 
 				
 			// Check status code
 			$status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-	
-			if(2 != substr($status,0,1))
+			
+			if(2 != substr($status,0,1)) {
+				$logger->error(sprintf('[Storage] Error connecting to remote URL: %s %s - %s', $verb, $url, $status));
 				return false;
+			}
 	
 			curl_close($ch);
 	
