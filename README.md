@@ -16,8 +16,8 @@ Installation
 * Change directory to **/cerb5/storage/plugins/**
 * `git clone git://github.com/cerb5-plugins/wgm.storage.s3.gatekeeper.git`
 * In your helpdesk, enable the plugin from **Setup->Plugins**.
-* Download the gatekeeper development toolkit (currently unavailable)
-* Implement remote authentication in your gatekeeper script and configure your Amazon S3 details
+* Download the gatekeeper development toolkit from https://gist.github.com/1372736
+* Configure your Amazon S3 and authentication details in the script
 * Create a new Storage Profile from **Setup->Storage->Profiles**.
 
 Credits
