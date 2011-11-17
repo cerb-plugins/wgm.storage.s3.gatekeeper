@@ -124,8 +124,7 @@ class DevblocksStorageEngineGatekeeper extends Extension_DevblocksStorageEngine 
 	private function _getSignedURL($username, $password, $url, $verb = 'GET', $filename = null) {	
 		$header = array();
 		$ch = curl_init();
-	
-		$payload = array('username' => $username, 'password' => $password, 'verb' => $verb, 'key' => $filename);
+		$payload = array('verb' => $verb, 'key' => $filename);
 		$http_date = gmdate(DATE_RFC822);
 	
 		$header[] = 'Date: '.$http_date;
@@ -139,7 +138,6 @@ class DevblocksStorageEngineGatekeeper extends Extension_DevblocksStorageEngine 
 					$postfields .= $key.'='.rawurlencode($value) . '&';
 				}
 				rtrim($postfields,'&');
-	
 			} elseif (is_string($payload)) {
 				$postfields = $payload;
 			}
@@ -150,19 +148,20 @@ class DevblocksStorageEngineGatekeeper extends Extension_DevblocksStorageEngine 
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $postfields);
 	
 		// Authentication
-// 		$url_parts = parse_url($url);
-// 		$url_path = $url_parts['path'];
-
-// 		$url_query = '';
-// 		if(isset($url_parts['query']) && !empty($url_parts))
-// 			$url_query = $this->_sortQueryString($url_parts['query']);
-
-// 		$secret = strtolower(md5($this->_secret_key));
-
-// 		$string_to_sign = "$verb\n$http_date\n$url_path\n$url_query\n$postfields\n$secret\n";
-// 		$hash = md5($string_to_sign); // base64_encode(sha1(
-// 		$header[] = 'Cerb5-Auth: '.sprintf("%s:%s",$this->_access_key,$hash);
-	
+		$url_parts = parse_url($url);
+		$url_path = $url_parts['path'];
+		
+		$url_query = '';
+		if(isset($url_parts['query']) && !empty($url_parts))
+			$url_query = $this->_sortQueryString($url_parts['query']);
+		
+		$secret = strtolower(md5($password));
+		
+		// Hardcoded as POST because we will only ever POST to the gatekeeper script
+		$string_to_sign = "POST\n$http_date\n$url_path\n$url_query\n$postfields\n$secret\n";
+		$hash = md5($string_to_sign); // base64_encode(sha1(
+		$header[] = 'Cerb5-Auth: '.sprintf("%s:%s",$username,$hash);
+		
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
 		curl_setopt($ch, CURLOPT_HEADER, 0);
@@ -177,8 +176,15 @@ class DevblocksStorageEngineGatekeeper extends Extension_DevblocksStorageEngine 
 			return false;
 	
 		if(empty($output))
+		// Parse output
+		$output = json_decode($output, true);
+		
+		if(!is_array($output) || empty($output) || $output['__status'] == 'error') {
+			$logger->error(sprintf('Error connecting to Gatekeeper: %s', $output['message']));
 			return false;
-	
+		} else {
+			$output = $output['message'];
+		}
 		return $output;
 	}
 	
@@ -250,5 +256,19 @@ class DevblocksStorageEngineGatekeeper extends Extension_DevblocksStorageEngine 
 	
 	public function streamData($handle, $fd, $length) {
 		return fread($this->_data, $length);
+	}
+	
+	private function _sortQueryString($query) {
+		// Strip the leading ?
+		if(substr($query,0,1)=='?') $query = substr($query,1);
+		$args = array();
+		$parts = explode('&', $query);
+		foreach($parts as $part) {
+			$pair = explode('=', $part, 2);
+			if(is_array($pair) && 2==count($pair))
+			$args[$pair[0]] = $part;
+		}
+		ksort($args);
+		return implode("&", $args);
 	}
 };
