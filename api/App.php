@@ -80,7 +80,7 @@ class DevblocksStorageEngineGatekeeper extends Extension_DevblocksStorageEngine 
 		if(false == ($this->_execute($url, 'PUT', $data, $length)))
 			return false;
 	
-		return $path;
+		return $key;
 	}
 	
 	public function get($namespace, $key, &$fp=null) {
