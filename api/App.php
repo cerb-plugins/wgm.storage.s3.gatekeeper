@@ -76,7 +76,7 @@ class DevblocksStorageEngineGatekeeper extends Extension_DevblocksStorageEngine 
 	
 		if(false == ($url = $this->_getSignedURL($this->_options['username'], $this->_options['password'], $this->_options['url'], 'PUT', $path)))
 			return false;
-	
+		
 		if(false == ($this->_execute($url, 'PUT', $data, $length)))
 			return false;
 	
@@ -125,16 +125,18 @@ class DevblocksStorageEngineGatekeeper extends Extension_DevblocksStorageEngine 
 
 	private function _getSignedURL($username, $password, $url, $verb = 'GET', $filename = null) {
 		$logger = DevblocksPlatform::getConsoleLog();
+		
 		$header = array();
 		$ch = curl_init();
+		
 		$payload = array('verb' => $verb, 'key' => $filename);
 		$http_date = gmdate(DATE_RFC822);
-	
+		
 		$header[] = 'Date: '.$http_date;
 		$header[] = 'Content-Type: application/x-www-form-urlencoded; charset=utf-8';
-	
+		
 		$postfields = '';
-	
+		
 		if(!is_null($payload)) {
 			if(is_array($payload)) {
 				foreach($payload as $key => $value) {
@@ -145,11 +147,11 @@ class DevblocksStorageEngineGatekeeper extends Extension_DevblocksStorageEngine 
 				$postfields = $payload;
 			}
 		}
-	
+		
 		$header[] = 'Content-Length: ' .  strlen($postfields);
 		curl_setopt($ch, CURLOPT_POST, 1);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $postfields);
-	
+		
 		// Authentication
 		$url_parts = parse_url($url);
 		$url_path = $url_parts['path'];
@@ -169,15 +171,16 @@ class DevblocksStorageEngineGatekeeper extends Extension_DevblocksStorageEngine 
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
 		curl_setopt($ch, CURLOPT_HEADER, 0);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	
+		
 		$output = curl_exec($ch);
-	
+			
 		// Check status code
 		$status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 		if(2 != substr($status,0,1)) {
 			$logger->error(sprintf("[Storage] Error connecting to Gatekeeper: %s", $status));
 			return false;
 		}
+		
 		// Parse output
 		$output = json_decode($output, true);
 		
@@ -199,7 +202,7 @@ class DevblocksStorageEngineGatekeeper extends Extension_DevblocksStorageEngine 
 	
 			//curl_setopt($ch, CURLOPT_HEADER, true);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-				
+	
 			if(is_resource($data)) {
 				// set class var
 				$this->_data = $data;
@@ -224,17 +227,17 @@ class DevblocksStorageEngineGatekeeper extends Extension_DevblocksStorageEngine 
 						break;
 				}
 			}
-	
+			
 			$header[] = 'Date: '.$http_date;
 			// Blank out since we pre-signed the URL
 			$header[] = 'Content-Type:';
 			$header[] = 'Content-Length: '.$length;
 			$header[] = 'Expect: ';
 			$header[] = 'Transfer-Encoding: ';
-				
+	
 			curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
 			$response = curl_exec($ch);
-				
+			
 			// Check status code
 			$status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 			
@@ -244,10 +247,10 @@ class DevblocksStorageEngineGatekeeper extends Extension_DevblocksStorageEngine 
 			}
 	
 			curl_close($ch);
-	
 		} catch (Exception $e) {
 			return false;
 		}
+		
 		// Return
 		switch($verb) {
 			case 'GET':
