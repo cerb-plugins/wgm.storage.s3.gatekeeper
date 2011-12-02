@@ -2,11 +2,18 @@
 <plugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.devblocks.com/schema/plugin.xsd">
 	<id>wgm.storage.s3.gatekeeper</id>
 	<name>[WGM] S3 Gatekeeper Storage Engine</name>
-	<description>This plugin adds a new Storage Engine to your helpdesk for working with Amazon S3 without directly knowing the required credentials. Instead, it authenticates with a remote script and securely retrieves a pre-signed URL which it then uses to perform requests.</description>
+	<description>This plugin adds a new storage engine for Amazon S3 that doesn't store or expose your AWS account credentials. Instead, it authenticates with a remote gatekeeper script and retrieves a secure, pre-signed URL that is used to perform requests.</description>
 	<author>WebGroup Media, LLC.</author>
-	<revision>0</revision>
-	<link>http://wiki.cerb4.com/wiki/New_Changes</link>
+	<version>1.0.0</version>
+	<link>http://www.cerberusweb.com/</link>
 	<image>plugin.png</image>
+
+	<!-- Requirements -->
+
+	<requires>
+		<app_version min="5.3" max="5.7" />
+		<php_extension name="curl" />
+	</requires>
 	
 	<!-- Plugin Dependencies -->
 
