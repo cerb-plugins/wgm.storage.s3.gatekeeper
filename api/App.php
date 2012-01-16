@@ -169,8 +169,9 @@ class DevblocksStorageEngineGatekeeper extends Extension_DevblocksStorageEngine 
 		
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-		curl_setopt($ch, CURLOPT_HEADER, 0);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_HEADER, false);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 		
 		$output = curl_exec($ch);
 			
@@ -207,9 +208,9 @@ class DevblocksStorageEngineGatekeeper extends Extension_DevblocksStorageEngine 
 				// set class var
 				$this->_data = $data;
 				curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
+				curl_setopt($ch, CURLOPT_NOSIGNAL, 1);
 				curl_setopt($ch, CURLOPT_LOW_SPEED_LIMIT, 1);
 				curl_setopt($ch, CURLOPT_LOW_SPEED_TIME, 180);
-				curl_setopt($ch, CURLOPT_NOSIGNAL, 1);
 				curl_setopt($ch, CURLOPT_READFUNCTION, array($this, 'streamData'));
 				curl_setopt($ch, CURLOPT_UPLOAD, true);
 				curl_setopt($ch, CURLINFO_CONTENT_LENGTH_UPLOAD, $length);
@@ -235,6 +236,7 @@ class DevblocksStorageEngineGatekeeper extends Extension_DevblocksStorageEngine 
 			$header[] = 'Expect: ';
 			$header[] = 'Transfer-Encoding: ';
 	
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 			curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
 			$response = curl_exec($ch);
 			
