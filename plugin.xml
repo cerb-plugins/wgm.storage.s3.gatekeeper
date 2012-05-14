@@ -4,21 +4,21 @@
 	<name>S3 Gatekeeper Storage Engine</name>
 	<description>This plugin adds a new storage engine for Amazon S3 that doesn't store or expose your AWS account credentials. Instead, it authenticates with a remote gatekeeper script and retrieves a secure, pre-signed URL that is used to perform requests.</description>
 	<author>WebGroup Media, LLC.</author>
-	<version>1.0.2</version>
+	<version>1.0.3</version>
 	<link>http://www.cerberusweb.com/</link>
 	<image>plugin.png</image>
 
 	<!-- Requirements -->
 
 	<requires>
-		<app_version min="5.3" max="5.8.99" />
+		<app_version min="6.0" max="6.0.99" />
 		<php_extension name="curl" />
 	</requires>
 	
 	<!-- Plugin Dependencies -->
 
 	<dependencies>
-		<require plugin_id="cerberusweb.core" version="5.3.0" />
+		<require plugin_id="cerberusweb.core" version="6.0.0-dev" />
 	</dependencies>
 
 	<!-- Extensions -->
