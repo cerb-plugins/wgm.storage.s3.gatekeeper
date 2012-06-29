@@ -1,4 +1,4 @@
-Cerb5 Plugins - wgm.storage.s3.gatekeeper
+Cerb Plugins - wgm.storage.s3.gatekeeper
 ===========================================
 Copyright (C) 2012 WebGroup Media, LLC.  
 [http://www.cerberusweb.com/](http://www.cerberusweb.com/)  
@@ -10,7 +10,7 @@ This plugin adds a new Storage Engine to your helpdesk for working with Amazon S
 Installation
 ------------
 * Change directory to **/cerb6/storage/plugins/**
-* `git clone git://github.com/cerb6-plugins/wgm.storage.s3.gatekeeper.git`
+* `git clone git://github.com/cerb-plugins/wgm.storage.s3.gatekeeper.git`
 * In your helpdesk, enable the plugin from **Setup->Plugins**.
 * Download the gatekeeper development toolkit from https://gist.github.com/1372736
 * Configure your Amazon S3 and authentication details in the script
