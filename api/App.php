@@ -57,10 +57,10 @@ class DevblocksStorageEngineGatekeeper extends Extension_DevblocksStorageEngine 
 	public function exists($namespace, $key) {
 		$path = $this->escapeNamespace($namespace) . '/' . $key;
 		
-		if(false == ($url = $this->_getSignedURL('scott', 'slut', 'GET', $path)))
+		if(false == ($url = $this->_getSignedURL($this->_options['username'], $this->_options['password'], $this->_options['url'], 'GET', $path)))
 			return false;
 		
-// 		return false !== ($info = $this->_s3->getObjectInfo($bucket, $key));
+		return true;
 	}
 	
 	public function put($namespace, $id, $data, $length = null) {
@@ -114,7 +114,7 @@ class DevblocksStorageEngineGatekeeper extends Extension_DevblocksStorageEngine 
 		// [TODO] Fail gracefully if resource doesn't exist (pass)
 		$path = $this->escapeNamespace($namespace) . '/' . $key;
 	
-		if(false ==  ($url = $this->_getSignedURL($this->_options['username'], $this->_options['password'], $this->_options['url'], $path)))
+		if(false ==  ($url = $this->_getSignedURL($this->_options['username'], $this->_options['password'], $this->_options['url'], 'DELETE', $path)))
 			return false;
 	
 		if(false == ($data = $this->_execute($url, 'DELETE')))
@@ -174,7 +174,7 @@ class DevblocksStorageEngineGatekeeper extends Extension_DevblocksStorageEngine 
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 		
 		$output = curl_exec($ch);
-			
+		
 		// Check status code
 		$status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 		if(2 != substr($status,0,1)) {
