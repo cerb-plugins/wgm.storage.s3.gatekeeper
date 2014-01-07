@@ -16,7 +16,7 @@ class DevblocksStorageEngineGatekeeper extends Extension_DevblocksStorageEngine 
 			return false;
 	}
 
-	function testConfig() {
+	function testConfig(Model_DevblocksStorageProfile $profile) {
 		// Test S3 connection info
 		@$username = DevblocksPlatform::importGPC($_POST['username'],'string','');
 		@$password = DevblocksPlatform::importGPC($_POST['password'],'string','');

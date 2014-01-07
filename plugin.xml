@@ -28,7 +28,7 @@
 		<!-- Storage Engines -->
 		<extension point="devblocks.storage.engine">
 			<id>devblocks.storage.engine.gatekeeper</id>
-			<name>Gatekeeper</name>
+			<name>S3 Gatekeeper</name>
 			<class>
 				<file>api/App.php</file>
 				<name>DevblocksStorageEngineGatekeeper</name>
