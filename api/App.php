@@ -263,7 +263,7 @@ class DevblocksStorageEngineGatekeeper extends Extension_DevblocksStorageEngine 
 		$logger = DevblocksPlatform::getConsoleLog();
 		
 		$header = array();
-		$ch = curl_init();
+		$ch = DevblocksPlatform::curlInit();
 		
 		if(!isset($headers['Date']))
 			$headers['Date'] = gmdate('D, d M Y H:i:s') . ' GMT';
@@ -320,10 +320,9 @@ class DevblocksStorageEngineGatekeeper extends Extension_DevblocksStorageEngine 
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
 		curl_setopt($ch, CURLOPT_HEADER, false);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 		
-		$output = curl_exec($ch);
+		$output = DevblocksPlatform::curlExec($ch);
 		
 		// Check status code
 		$status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -351,11 +350,10 @@ class DevblocksStorageEngineGatekeeper extends Extension_DevblocksStorageEngine 
 		$logger = DevblocksPlatform::getConsoleLog();
 		
 		try {
-			$ch = curl_init($url);
+			$ch = DevblocksPlatform::curlInit($url);
 			$http_date = gmdate(DATE_RFC2822);
 			$length = null;
 	
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 			//curl_setopt($ch, CURLOPT_VERBOSE, true);
 			//curl_setopt($ch, CURLINFO_HEADER_OUT, true);
 	
@@ -410,7 +408,7 @@ class DevblocksStorageEngineGatekeeper extends Extension_DevblocksStorageEngine 
 			
 			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 			curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-			$response = curl_exec($ch);
+			$response = DevblocksPlatform::curlExec($ch);
 			
 			// Check status code
 			$status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
