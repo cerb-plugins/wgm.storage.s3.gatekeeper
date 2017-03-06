@@ -303,7 +303,7 @@ class DevblocksStorageEngineGatekeeper extends Extension_DevblocksStorageEngine 
 		if(isset($url_parts['query']) && !empty($url_parts))
 			$url_query = $this->_sortQueryString($url_parts['query']);
 		
-		$secret = strtolower(md5($password));
+		$secret = DevblocksPlatform::strLower(md5($password));
 		
 		// Hardcoded as POST because we will only ever POST to the gatekeeper script
 		$string_to_sign = sprintf("%s\n%s\n%s\n%s\n%s\n%s\n",
