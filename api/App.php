@@ -68,7 +68,7 @@ class DevblocksStorageEngineGatekeeper extends Extension_DevblocksStorageEngine 
 	}
 
 	function renderConfig(Model_DevblocksStorageProfile $profile) {
-		$tpl = DevblocksPlatform::getTemplateService();
+		$tpl = DevblocksPlatform::services()->template();
 		$tpl->assign('profile', $profile);
 
 		$tpl->display("devblocks:wgm.storage.s3.gatekeeper::storage_engine/config/gatekeeper.tpl");
@@ -260,7 +260,7 @@ class DevblocksStorageEngineGatekeeper extends Extension_DevblocksStorageEngine 
 	}
 	
 	private function _getSignedURL($username, $password, $url, $verb = 'GET', $key = null, $headers = array()) {
-		$logger = DevblocksPlatform::getConsoleLog();
+		$logger = DevblocksPlatform::services()->log();
 		
 		$header = array();
 		$ch = DevblocksPlatform::curlInit();
@@ -347,7 +347,7 @@ class DevblocksStorageEngineGatekeeper extends Extension_DevblocksStorageEngine 
 	
 	// [TODO] Make this streaming safe
 	private function _execute($url, $verb = 'GET', $data = null, $headers = array()) {
-		$logger = DevblocksPlatform::getConsoleLog();
+		$logger = DevblocksPlatform::services()->log();
 		
 		try {
 			$ch = DevblocksPlatform::curlInit($url);
