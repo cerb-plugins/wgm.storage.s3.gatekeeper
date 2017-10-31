@@ -230,7 +230,7 @@ class DevblocksStorageEngineGatekeeper extends Extension_DevblocksStorageEngine 
 
 		$parsed = parse_url($url);
 		$query_str = $parsed['query'];
-		parse_str($query_str, $query);
+		$query = DevblocksPlatform::strParseQueryString($query_str);
 		
 		$headers['Authorization'] = sprintf("AWS %s:%s",
 			$query['AWSAccessKeyId'],
